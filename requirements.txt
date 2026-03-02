@@ -12,3 +12,7 @@ beautifulsoup4
 rank-bm25
 pypdf
 trafilatura
+sentence-transformers
+tiktoken
+torch
+pandas
