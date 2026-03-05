@@ -33,7 +33,7 @@ RERANK_TOP_K = 5
 SIMILARITY_THRESHOLD = 0.3
 
 CHROMA_PATH = "data/chroma"
-COLLECTION_NAME = "rag_docs"
+COLLECTION_NAME = "langchain_tech_docs"
 
 EMBEDDING_BATCH_SIZE = 100
 

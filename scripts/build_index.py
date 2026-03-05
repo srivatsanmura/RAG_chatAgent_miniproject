@@ -1,7 +1,13 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from rag.extract_docs import extract_url
 from rag.chunking import chunk_documents
 from rag.vectordb import get_vectordb
 from rag.config import EMBEDDING_BATCH_SIZE
+
+from urllist import UrlList
 
 from rag.logger import logger
 
@@ -11,13 +17,13 @@ Implmenting scalable vector db ingestion pattern
 """
 
 def build_index():
-    urls = [...]
+    #urls = [...]
     vectordb = get_vectordb()
 
     batch = []
-    for i, url in enumerate(urls):
+    for i, url in enumerate(UrlList):
 
-        logger.info(f"Ingesting: {url}; {i+1}/{len(urls)}")
+        logger.info(f"Ingesting: {url}; {i+1}/{len(UrlList)}")
         doc = extract_url(url)
 
         if not doc:

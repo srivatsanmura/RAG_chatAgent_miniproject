@@ -16,3 +16,6 @@ sentence-transformers
 tiktoken
 torch
 pandas
+langchain-unstructured
+markdown
+unstructured[md]
