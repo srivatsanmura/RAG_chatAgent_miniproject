@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-from rag.vectordb import load_vectordb
+from rag.vectordb import get_vectordb
 from rag.graph import build_graph
 from rag.utils import prepare_visualization_data
 
@@ -31,7 +31,7 @@ if "graph" not in st.session_state:
     st.session_state.graph = build_graph()
 
 if "vectordb" not in st.session_state:
-    st.session_state.vectordb = load_vectordb()
+    st.session_state.vectordb = get_vectordb()
 
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
@@ -54,7 +54,8 @@ if query:
 
     answer = result["answer"]
 
-    reranked_docs = result["reranked_docs"]
+    # We use compressed_docs since that is the final processed form sent to the LLM
+    final_docs = result.get("compressed_docs", result.get("reranked_docs", []))
 
     st.session_state.chat_history.append(
         {"role": "user", "content": query}
@@ -77,20 +78,20 @@ if query:
     # Observability panel
     if show_chunks:
 
-        st.write("## Retrieved Chunks")
+        st.write("## Retrieved Chunks (Compressed)")
 
-        for i, doc in enumerate(reranked_docs):
+        for i, doc in enumerate(final_docs):
 
             with st.expander(f"Chunk {i+1}"):
 
                 st.write("Source:", doc["source"])
 
                 st.write(
-                    f"Vector Score: {doc['vector_score']:.4f}"
+                    f"Vector Score: {doc.get('vector_score', 0):.4f}"
                 )
 
                 st.write(
-                    f"Rerank Score: {doc['rerank_score']:.4f}"
+                    f"Rerank Score: {doc.get('rerank_score', 0):.4f}"
                 )
 
                 st.write(doc["content"])
@@ -100,7 +101,7 @@ if query:
 
         st.write("## Score Visualization")
 
-        df = prepare_visualization_data(reranked_docs)
+        df = prepare_visualization_data(final_docs)
 
         st.dataframe(df)
 

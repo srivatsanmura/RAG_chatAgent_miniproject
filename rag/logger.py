@@ -8,6 +8,21 @@ import logging
 import sys
 import os
 
+from datetime import datetime
+
+class ImmediateFileHandler(logging.FileHandler):
+    """FileHandler that forces an OS-level flush to disk on every emit."""
+    def emit(self, record):
+        super().emit(record)
+        self.flush()
+        try:
+            if self.stream is not None:
+                os.fsync(self.stream.fileno())
+        except OSError:
+            pass
+
+LOG_FILE = f"logs/rag_agent_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+
 def setup_logger(name: str = "rag_agent", level: int = logging.INFO) -> logging.Logger:
     """Configures and returns a dedicated logger with console output."""
     logger = logging.getLogger(name)
@@ -28,7 +43,7 @@ def setup_logger(name: str = "rag_agent", level: int = logging.INFO) -> logging.
         
         # Optional: Add file handler if needed
         os.makedirs("logs", exist_ok=True)
-        file_handler = logging.FileHandler("logs/rag_agent.log")
+        file_handler = ImmediateFileHandler(LOG_FILE)
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
 

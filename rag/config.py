@@ -11,7 +11,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 EMBEDDING_MODEL = os.getenv(
     "EMBEDDING_MODEL",
-    "text-embedding-3-small"
+    "all-MiniLM-L6-v2"
 )
 
 GENERATION_MODEL = os.getenv(
@@ -28,7 +28,15 @@ CHUNK_SIZE = 500
 CHUNK_OVERLAP = 100
 
 RETRIEVAL_TOP_K = 20
+RETRIEVAL_FETCH_K = 50
+RETRIEVAL_LAMBDA_MULT = 0.5
+
 RERANK_TOP_K = 5
+RERANK_THRESHOLD = 0.5
+CROSS_ENCODER_MODEL = os.getenv(
+    "CROSS_ENCODER_MODEL",
+    "cross-encoder/ms-marco-MiniLM-L-6-v2"
+)
 
 SIMILARITY_THRESHOLD = 0.3
 

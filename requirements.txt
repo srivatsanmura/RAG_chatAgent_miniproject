@@ -19,3 +19,5 @@ pandas
 langchain-unstructured
 markdown
 unstructured[md]
+langchain-huggingface
+nltk
