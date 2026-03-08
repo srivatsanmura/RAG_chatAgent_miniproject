@@ -11,7 +11,6 @@ def prepare_visualization_data(reranked_docs):
 
             "chunk_id": i,
             "source": doc["source"],
-            "vector_score": doc["vector_score"],
             "rerank_score": doc["rerank_score"],
             "preview": doc["content"][:200]
 

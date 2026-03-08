@@ -51,7 +51,7 @@ try:
         all_splits.extend(markdown_splitter.split_text(docs[0].page_content))
 
         # since we feed only the page_content to the above splitter, their metadata is lost
-        # Add metadata to the splits
+        # Add metadata to the splits explicitly
         for split in all_splits:
             split.metadata.update(docs[0].metadata)
             

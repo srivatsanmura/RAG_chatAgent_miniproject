@@ -7,11 +7,13 @@
 #### Top k documents are selected based on the rerank score
 from sentence_transformers import CrossEncoder
 from rag.config import RERANK_TOP_K, CROSS_ENCODER_MODEL
+from rag.config import RERANK_THRESHOLD
+import torch
 
 reranker = CrossEncoder(
     CROSS_ENCODER_MODEL,
     activation_fn=torch.nn.Sigmoid()
-)
+)   
 
 
 def rerank(query, docs):

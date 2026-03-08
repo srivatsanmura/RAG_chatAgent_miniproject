@@ -4,7 +4,7 @@
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from rag.config import CHUNK_SIZE, CHUNK_OVERLAP
-
+from langchain_core.documents import Document as LCDocument
 
 def chunk_documents(documents):
     """
@@ -22,7 +22,7 @@ def chunk_documents(documents):
     )
 
     # Support both LangChain Document objects and legacy dicts
-    from langchain_core.documents import Document as LCDocument
+
     if documents and isinstance(documents[0], LCDocument):
         texts = [doc.page_content for doc in documents]
         metadatas = [doc.metadata for doc in documents]
