@@ -3,19 +3,36 @@ from rag.retriever import retrieve
 from rag.reranker import rerank
 from rag.compressor import sentence_filter
 from rag.generator import generate_answer
+from rag.rewriter import rewrite_query
 from langchain_chroma import Chroma
 from typing import TypedDict
 
 
 class RAGState(TypedDict):
     query: str
+    original_query: str
+    summary: str
+    buffer: list
     vectordb: Chroma
     retrieved_docs: list
     reranked_docs: list
     compressed_docs: list
-    chat_history: list
+    chat_history: str
     answer: str
     sources: list
+
+
+def rewrite_node(state: RAGState) -> RAGState:
+    
+    new_query = rewrite_query(
+        state["query"],
+        state.get("summary", ""),
+        state.get("buffer", [])
+    )
+    
+    state["original_query"] = state["query"]
+    state["query"] = new_query
+    return state
 
 
 def retrieve_node(state: RAGState) -> RAGState:
@@ -82,13 +99,15 @@ def build_graph():
 
     graph = StateGraph(RAGState)
 
+    graph.add_node("rewrite", rewrite_node)
     graph.add_node("retrieve", retrieve_node)
     graph.add_node("rerank", rerank_node)
     graph.add_node("compress", compress_node)
     graph.add_node("generate", generate_node)
 
-    graph.set_entry_point("retrieve")
+    graph.set_entry_point("rewrite")
 
+    graph.add_edge("rewrite", "retrieve")
     graph.add_edge("retrieve", "rerank")
     graph.add_edge("rerank", "compress")
     graph.add_edge("compress", "generate")

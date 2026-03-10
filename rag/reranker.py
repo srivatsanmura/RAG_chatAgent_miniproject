@@ -10,6 +10,8 @@ from rag.config import RERANK_TOP_K, CROSS_ENCODER_MODEL
 from rag.config import RERANK_THRESHOLD
 import torch
 
+from rag.logger import logger
+
 reranker = CrossEncoder(
     CROSS_ENCODER_MODEL,
     activation_fn=torch.nn.Sigmoid()
@@ -17,7 +19,7 @@ reranker = CrossEncoder(
 
 
 def rerank(query, docs):
-    
+    logger.info(f"Reranking query: {query} against {len(docs)} documents")
     if not docs:
         return []
 
@@ -35,9 +37,14 @@ def rerank(query, docs):
         doc for doc in docs if doc["rerank_score"] >= RERANK_THRESHOLD
     ]
 
+    ### If filtered docs are less than 5, return the top 5 docs
+    if len(filtered_docs) < RERANK_TOP_K:
+        filtered_docs = docs[:RERANK_TOP_K]
+
     filtered_docs.sort(
         key=lambda x: x["rerank_score"],
         reverse=True
     )
 
+    logger.info(f"Reranked {len(filtered_docs)} documents")
     return filtered_docs[:RERANK_TOP_K]

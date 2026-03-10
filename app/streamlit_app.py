@@ -8,11 +8,11 @@ from rag.agentMemory import AgentMemory
 
 
 st.set_page_config(
-    page_title="RAG Assistant",
+    page_title="LangChain Documentation Support Assistant",
     layout="wide"
 )
 
-st.title("Developer Docs RAG Assistant")
+st.title("LangChain Documentation Support Assistant")
 
 # Sidebar
 st.sidebar.header("Observability Panel")
@@ -62,6 +62,8 @@ if query:
 
     state = {
         "query": query,
+        "summary": st.session_state.memory.get_summary(),
+        "buffer": st.session_state.memory.buffer,
         "chat_history": f"System Summary: {st.session_state.memory.get_summary()}\nRecent Messages: {st.session_state.memory.buffer}",
         "vectordb": vectordb
     }
@@ -83,6 +85,9 @@ if query:
                         if isinstance(node_state, dict):
                             result_state.update(node_state)
                 status.update(label="Execution complete", state="complete", expanded=False)
+
+            if "original_query" in result_state and result_state["original_query"] != result_state["query"]:
+                st.markdown(f"<small><i>Rewritten user query for context: {result_state['query']}</i></small>", unsafe_allow_html=True)
 
             answer = result_state.get("answer", "")
             sources = result_state.get("sources", [])
@@ -120,7 +125,6 @@ if query:
                     st.markdown(f"<li><small><i>{doc['content']}</i></small></li>", unsafe_allow_html=True)
 
         if show_scores:
-
             st.markdown("<b><u><small>Score Visualization<small> </u></b>", unsafe_allow_html=True)
 
             df = prepare_visualization_data(final_docs)

@@ -1,6 +1,7 @@
 from langchain_core.messages import HumanMessage, SystemMessage
 from rag.models import get_llm
 
+from rag.logger import logger
 
 llm = get_llm()
 
@@ -21,9 +22,9 @@ Rules:
 
 
 def generate_answer(query, reranked_docs, chat_history):
-
+    logger.info(f"Generating answer for query: {query}")
     if not reranked_docs:
-
+        logger.info("No reranked docs, returning no answer")
         return {
 
             "answer": "I cannot find relevant information in the provided documents.",
@@ -68,7 +69,7 @@ Question:
     response = llm.invoke(messages)
 
     answer = response.content
-
+    logger.info(f"Generated answer: {answer}")
     return {
 
         "answer": answer,
