@@ -9,6 +9,10 @@ load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
+SOURCE_PATH = os.getenv(
+    "SOURCE_PATH"
+)
+
 EMBEDDING_MODEL = os.getenv(
     "EMBEDDING_MODEL",
     "all-MiniLM-L6-v2"

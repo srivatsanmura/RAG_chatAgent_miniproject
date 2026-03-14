@@ -18,12 +18,13 @@ from langchain_text_splitters import MarkdownHeaderTextSplitter
 
 from rag.chunking import chunk_documents
 from rag.vectordb import get_vectordb
-from rag.config import EMBEDDING_BATCH_SIZE
+from rag.config import EMBEDDING_BATCH_SIZE, SOURCE_PATH
 from rag.logger import logger
+
 
 try:
 
-    p = Path(PureWindowsPath(r"C:/Users/msriv/OneDrive/Srivatsan/Srivatsan/Learning and Dev/gitRepos/langchain_ai_docs"))
+    p = Path(PureWindowsPath(SOURCE_PATH))
 
 
     headers_to_split_on = [("#", "Header 1"), 
